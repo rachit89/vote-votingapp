@@ -29,10 +29,9 @@ pipeline {
     environment {
         DOCKER_HUB_USER = 'mona1712'
         DOCKER_HUB_PASS = 'Chawla1712?'
-        last_started_build_stage = ""
         BUILD_DATE = sh(script: "date +%d_%m_%Y", returnStdout: true).trim()
         Branch = "main"
-        url = "https://github.com/Monachawla1712/vote-votingapp.git"
+        github_url = "https://github.com/Monachawla1712/vote-votingapp.git"
 
 
     }
@@ -42,6 +41,7 @@ pipeline {
             steps {
                 echo "Cloning the app"
                 container('kaniko') {
+                    echo "${Branch}, ${github_url}" 
                     git branch: "${Branch}" , url: "${url}"     
                 }
             }
