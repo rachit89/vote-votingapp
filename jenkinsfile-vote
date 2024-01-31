@@ -32,7 +32,7 @@ pipeline {
         last_started_build_stage = ""
         BUILD_DATE = sh(script: "date +%d_%m_%Y", returnStdout: true).trim()
         Branch = main
-        url = https://github.com/Monachawla1712/Voting-app.git
+        url = https://github.com/Monachawla1712/vote-votingapp.git
 
 
     }
