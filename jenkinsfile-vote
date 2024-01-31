@@ -42,7 +42,7 @@ pipeline {
                 echo "Cloning the app"
                 container('kaniko') {
                     echo "${Branch}, ${github_url}" 
-                    git branch: "${Branch}" , url: "${url}"     
+                    git branch: "${Branch}" , url: "${github_url}"     
                 }
             }
         }
