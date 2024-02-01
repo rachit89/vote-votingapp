@@ -65,13 +65,12 @@ pipeline {
          stage('Update Helm Chart and Push to Git') {
             agent {
                 kubernetes {
+                    label 'jenkinsrun'
+                    defaultContainer 'builder'
                     yaml """
                     apiVersion: v1
                     kind: Pod
-                    metadata:
-                      name: builder
                     spec:
-                      restartPolicy: Never
                       containers:
                       - name: builder
                         image: squareops/jenkins-build-agent:v3
@@ -90,7 +89,7 @@ pipeline {
                 script {
                     withCredentials([gitUsernamePassword(credentialsId: "${credentials_ID}", gitToolName: 'Default')]) {
                         sh '''
-                        git clone -b ${git_branch} ${helmchart_repo_url}
+                        git clone -b main ${helmchart_repo_url}
                         git config --global user.email ${email_id}
                         git config --global user.name ${user_name}
                         ls -la
