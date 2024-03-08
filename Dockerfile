@@ -10,7 +10,7 @@ RUN apt-get update && \
 WORKDIR /usr/local/app
 
 # Install our requirements.txt
-COPY /vote/requirements.txt ./requirements.txt
+COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Define a stage specifically for development, where it'll watch for
@@ -24,10 +24,14 @@ CMD ["python", "app.py"]
 FROM base AS final
 
 # Copy our code from the current folder to the working directory inside the container
-COPY ./vote/ .
+COPY . .
 
 # Make port 80 available for links and/or publish
 EXPOSE 80
+
+# Load environment variables from .env file
+ENV ENV_FILE_PATH .env
+ENV $(cat $ENV_FILE_PATH | xargs)
 
 # Define our command to be run when launching the container
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]

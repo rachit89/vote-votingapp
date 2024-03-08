@@ -5,9 +5,18 @@ import socket
 import random
 import json
 import logging
+from dotenv import load_dotenv
 
-option_a = os.getenv('OPTION_A', "Cats")
-option_b = os.getenv('OPTION_B', "Dogs")
+# Load environment variables from .env file
+load_dotenv()
+
+# Retrieve values from environment variables
+redis_host = os.getenv('REDIS_HOST', 'redis')
+redis_port = int(os.getenv('REDIS_PORT', 6379))
+redis_db = int(os.getenv('REDIS_DB', 0))
+option_a = os.getenv('OPTION_A', 'Cats')
+option_b = os.getenv('OPTION_B', 'Dogs')
+
 hostname = socket.gethostname()
 
 app = Flask(__name__)
@@ -18,7 +27,7 @@ app.logger.setLevel(logging.INFO)
 
 def get_redis():
     if not hasattr(g, 'redis'):
-        g.redis = Redis(host="redis", db=0, socket_timeout=5)
+        g.redis = Redis(host=redis_host, port=redis_port, db=redis_db, socket_timeout=5)
     return g.redis
 
 @app.route("/", methods=['POST','GET'])
@@ -46,6 +55,6 @@ def hello():
     resp.set_cookie('voter_id', voter_id)
     return resp
 
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
+
